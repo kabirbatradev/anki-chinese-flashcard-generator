@@ -40,7 +40,17 @@ Takes in a chinese vocab list generates an anki deck package with stroke order a
 - Uses genanki library to package decks of cards into an anki package.
 
 ## How to use:
-1. Use the website! (under construction)
+1. Download this repository.
+2. Add vocab list as a text file into the folder.
+   - You can use the `testList.txt` as an example of a vocab list text file.
+3. Go into `createAnkiDeckPackage.py` and edit the variables up top.
+   - `outerDeckName`: will be used to name the deck containing the subdecks
+   - `vocabListFileName`: name of the vocab list text file
+4. Run `python createAnkiDeckPackage.py` in the terminal. 
+   - Make sure python is installed.
+   - You will need to install libraries: requests, genanki, random.
+   - use pip install \<library name\>.
+5. That's it! Running this script will create the apkg file for you!
 
 If you enjoyed using this or have feature requests, feel free to [email me](mailto:kabirbatraa@gmail.com).
 

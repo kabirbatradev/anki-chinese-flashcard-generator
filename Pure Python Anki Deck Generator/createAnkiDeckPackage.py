@@ -173,7 +173,7 @@ for line in vocabListFile:
 # old model id: 1607392319
 # updating the model id will create a new model (card template)
 
-model_id = 1956882460 
+model_id = 1956882460  # make a new id for new template (no stroke data)
 # random.randrange(1 << 30, 1 << 31)
 # deck_ids = [1567115450, 1705746358, 1152996867, 1085417380]
 model_name = "Kabir's Chinese Card Template"
@@ -214,7 +214,7 @@ my_model = genanki.Model(
 allGenAnkiDecks = []
 for deckName in decks.keys():
     deckFullName = f"{outerDeckName}::{deckName}"
-    deckId = random.randrange(1 << 30, 1 << 31)
+    deckId = random.randrange(1 << 30, 1 << 31) # deck id is always new
     print("NEW DECK:", deckFullName)
 
     # create the new deck
