@@ -64,7 +64,7 @@ def update_error_messages(messages):
         else:
             msg_elem.className += " bg-blue-100 text-blue-700"
         msg_elem.textContent = message
-        error_div.appendChild(msg_elem)
+        error_div.insertBefore(msg_elem, error_div.firstChild)
 
 def update_vocabulary_table(data):
     tbody = document.getElementById("vocabulary-table-body")
