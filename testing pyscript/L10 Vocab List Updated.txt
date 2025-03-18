@@ -1,0 +1,86 @@
+Text 1
+好久不见；hǎojiǔ bú jiàn: long time no see
+好久；hǎojiǔ: for a long time；等你好久了，学了好久中文；have been waiting for you for a long time, have been learning Chinese for a long time
+学院；xuéyuàn: college, institute；电影学院，在汉语学院学习；college of film studies, study at the college of Chinese language
+报告；bàogào: report, lecture, presentation；做报告，听报告；to give a report, to listen to a lecture
+语言；yǔyán: language；学习语言，语言专业，语言学院；to study a language, language major, college of languages
+文学；wénxué: literature；中国文学，英美文学，文学专业；Chinese literature, English-American literature, literature major
+教授；jiàoshòu: professor；中文教授，丁教授，工程专业的教授；Chinese-language professor, Professor Ding, an Engineering-major professor
+过节；guòjié: to spend a holiday, to celebrate a holiday；过节的时候，过圣诞节；at the time of a holiday, to celebrate Christmas
+过；guò: to spend (time)；过生日，过春节，过年；to celebrate a birthday, to celebrate the Spring Festival, to celebrate the new year
+节；jié: holiday, festival；圣诞节，春节，一个节日；Christmas, Spring Festival, a holiday
+外婆；wàipó: maternal grandmother；我外婆；my maternal grandma
+住；zhù: to live；住在宿舍里，跟我外婆一起住，住在美国；to live in a dorm, to live with my grandmother, to live in the US
+旅行；lǚxíng: to travel；去旅行，喜欢旅行，常常旅行；go travel, like traveling, often travel
+看；kàn: to see, to visit (someone)；看家人，看妈妈，去看朋友；visit family, visit mom, go see friends
+决定；juédìng: to decide, decision；决定去，决定参加聚会，还没有决定，一个决定；decide to go, decide to attend the party, not yet decided, a decision
+重要；zhòngyào: important；重要的决定，重要的活动，重要的报告，重要的事，重要的问题；an important decision, an important activity, an important report, important things, important issues
+节日；jiérì: holiday, festival；重要的节日，祝你节日快乐，一个节日；important holidays, wish you happy holiday, one holiday
+年轻；niánqīng: young；年轻人，很年轻，年轻的教授；young people, very young, a young professor
+西方；Xīfāng: the West；西方国家，西方人，西方文学；western countries, westerner, western literature
+爱人；àirén: spouse；我爱人，我朋友的爱人；my spouse, my friend’s spouse
+爱；Ài: to love；爱妈妈，爱家乡，爱国，我爱你；to love mom, to love my hometown, patriotic, I love you
+儿子；érzi: son；他儿子，小儿子，一个儿子；his son, youngest son, one son
+王府井；Wángfǔjǐng: a famous shopping area in Beijing；去王府将买东西；go shopping at Wangfujing
+圣诞节；Shèngdànjié: Christmas；圣诞节礼物；Christmas gift
+加拿大；Jiānádà: Canada；加拿大人；Canadian people
+古波；Gǔ Bō: Gu Bo；丁立波的爸爸叫古波；Ding Libo’s dad is called Gu Bo. 
+丁云；Dīng Yún: Ding Yun；丁立波的妈妈叫丁云；Ding Libo’s mom is called Ding Yun. 
+春节；Chūnjié: Spring Festival；过春节，春节快乐；to celebrate the Spring Festival, happy Spring Festival
+
+
+Text 2 
+刚才；gāngcái: just now；刚才你不在，刚才我有事儿；you weren’t here just now, I was busy just now
+手机；shǒujī: cellphone；手机号，买手机，新手机，一个手机；cellphone number, new cellphone, one cellphone
+手；shǒu: hand；左手，右手，一只手；left hand, right hand, one hand
+响；xiǎng: to ring, loud；手机响了，太响了；cellphone rings, too loud
+商店；shāngdiàn: store, shop；去商店买东西，卖手机的商店；go shopping at the store, a store that sells cellphones
+店；diàn: store, shop；药店，书店，面包店，饭店；drugstore, bookstore, bakery, restaurant
+短信；duǎnxìn: text message；手机短信，发短信，一条短信；cellphone message, to send text message, one text message
+短；duǎn: short；很短，有点儿短，短一点儿；very short, a little short, make it a little shorter
+让；ràng: to let, to make (someone do something)；让我走，妈妈让我早点儿去，老师让我问问题；let me go, mom asks ,e to go early, teacher lets me ask questions 
+打电话；dǎ diànhuà: make a phone call；给妈妈打电话；call mom
+电话；diànhuà: phone, phone call；电话响了，打一个电话；the phone rings, to make a phone call
+喂；wèi: hello (on the phone)；喂，你好！喂，是我。; Hello! Hello, it’s me. 
+问好；wènhǎo: to send one’s regards (to someone), to say hello (to someone)；问你妈妈好，跟他问好；to send regards to your mom, to say hello to him
+帮；bāng: to help；请帮我一下，帮我开门；please give me hand, help me open the door
+想；xiǎng: to miss, to think about；想家，想家人，很想你；to miss home, to miss family, miss you very much
+复习；fùxí: to review；复习语法，复习汉字，复习化学；to review grammar, to review hanzi, to review chemistry
+课文；kèwén: text；复习课文，学习课文，第十课的课文；to review text, to study text, lesson 10’s text
+用；yòng: to use；用手机，有用，没用；to use cellphone, useful, useless
+词典；cídiǎn: dictionary；英语词典，英汉词典，会用词典；English dictionary, English-Chinese dictionary, know how to use dictionary
+上网；shàngwǎng: to go online；能上网，用手机上网；able to go online, use phone to go online
+网；wǎng: net, Internet；中文网，网站；Chinese-language websites, websites
+寄；jì: to mail；寄礼物，寄衣服，给朋友寄书；to mail presents, to mail clothes, to mail books to friends
+
+
+Supplementary
+新年；xīnnián: new year；过新年；to celebrate New Year’s Day
+国庆节；Guóqìng jié: National Day；美国的国庆节是七月四号，中国的国庆节是十月一号; The National Day in the United States is July 4th, and the National Day in China is October 1st.
+清明节；Qīngmíng jié: Qingming Festival, Tomb Sweeping Day；清明节常常是四月五号; Tomb Sweeping Day is usually on April 5th
+劳动节；Láodòng jié: Labor Day；劳动节是五月一号; Labor Day is May 1st
+端午节；Duānwǔ jié: Dragon Boat Festival；端午节是中国农历(Chinese calendar)五月五号; The Dragon Boat Festival falls on the fifth day of the fifth lunar month in the Chinese lunar calendar
+儿童节；Értóng jié: Children’s Day；儿童节是六月一号; Children's Day is June 1st
+情人节；Qíngrén jié: Valentine’s Day；情人节是二月十四号; Valentine's Day is February 14th
+中秋节；Zhōngqiū jié: Mid-Autumn Festival；中秋节是中国农历(Chinese calendar)八月十五号; The Mid-Autumn Festival falls on August 15th in the Chinese calendar
+复活节；Fùhuó jié: Easter；复活节是春分(Spring Equinox)满月(full moon)后的第一个星期天; Easter is the first Sunday after the full moon of the Spring Equinox
+电脑；diànnǎo: computer；电脑科学，电脑工程师，用电脑上网；computer science, computer engineer, use computer to go online
+发；fā: to send；发短信，发邮件；to send text messages, to send emails
+电子邮件；diànzǐ yóujiàn: email；发电子邮件，一封电子邮件；to email, one email
+作业；zuòyè: homework；做作业，数学作业；to do homework, math homework
+录音；lùyīn: recording；听录音，用手机录音；to listen to recordings, to record sound using cellphone
+祝贺；zhùhè: to congratulate；祝贺你，祝贺你有了新工作；to congratulate you, congratulations on your new job
+轻松；qīngsōng: easy and relaxed；这个工作很轻松，太轻松了；this job is quite easy and relaxed, too easy
+日记；rìjì: diary；写日记，日记本，一篇日记；to write diary, diary (the notebook), one piece of diary
+晴；qíng: clear；今天是晴天；today is sunny
+第一次；dìyīcì: the first time；第一次吃日本菜，第一次来中国；first time eating Japanese food, first time coming to China
+惊喜；jīngxǐ: pleasantly surprised；我很惊喜，一个惊喜；I’m pleasantly surprised, a happy surprise
+通；tōng: to connect；跟朋友通电话；to speak on the phone with friends
+京剧；jīngjù: Peking opera；唱京剧，听京剧；to sing Peking opera, to listen to Peking opera
+火锅；huǒguō: hotpot；吃火锅，四川火锅；to eat hotpot, Sichuan hotpot
+
+
+Basic Hanzi
+巾；jīn: piece of cloth；毛巾；towel
+戈；gē: a type of ancient Chinese weapon
+古；gǔ: ancient；古人，古时候；ancient people, ancient times
