@@ -75,7 +75,7 @@ async def process_file(file_content, textbook_name, lesson_name):
     messages.append(f"Processing file for {textbook_name}: {lesson_name}")
     
     # Set up outer deck name
-    outerDeckName = f"{textbook_name}" if textbook_name else "Chinese"
+    outerDeckName = f"{textbook_name}::{lesson_name}"
     
     # Process the file content line by line
     lines = file_content.split('\n')
@@ -211,7 +211,7 @@ def generate_and_download_anki_package(event):
     # Get deck metadata
     textbook_name = document.getElementById("textbook-name").value
     lesson_name = document.getElementById("lesson-name").value
-    outerDeckName = f"{textbook_name}" if textbook_name else "Chinese"
+    outerDeckName = f"{textbook_name}::{lesson_name}"
     
     try:
         # Card template setup
