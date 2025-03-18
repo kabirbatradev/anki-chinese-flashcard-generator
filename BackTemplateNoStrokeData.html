@@ -15,7 +15,7 @@ var chineseRegex = /\p{sc=Han}/u;
 
 var isChinese = (char) => chineseRegex.test(char);
 
-const filteredText = hanziCharacters.split("").filter(isChinese).join("");
+var filteredText = hanziCharacters.split("").filter(isChinese).join("");
 
 
 //const text = "This text has 一些中文 characters.";
@@ -49,15 +49,18 @@ document.getElementById('test').style.display = "none";
 
 var writers = []
 
-function hanziWriterOnload() {
-    drawCharacters();
-    initializeButtonState();
+// Function to clean up previous animations
+function cleanup() {
+    var hanziAnimationDiv = document.getElementById('hanziAnimationDiv');
+    hanziAnimationDiv.innerHTML = ""; // Clear previous SVG elements
+    writers = []; // Reset writers array
 }
-// drawCharacters();
+
 
 
 
 function drawCharacters() {
+    cleanup();
 
     writers = []
 
@@ -106,6 +109,22 @@ function drawCharacters() {
     }
 
 
+}
+
+
+// Function to handle when Hanzi Writer is ready
+function hanziWriterOnload() {
+    console.log("Hanzi Writer library loaded");
+    drawCharacters();
+    initializeButtonState();
+}
+
+// Check if Hanzi Writer is already loaded
+if (typeof HanziWriter !== "undefined") {
+    console.log("Hanzi Writer already loaded");
+    hanziWriterOnload();
+} else {
+    console.log("Waiting for Hanzi Writer to load...");
 }
 
 
