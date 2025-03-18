@@ -1,16 +1,24 @@
 from pyscript import display
-display("display test") # shows up at the bottom of the page
+# display("display test") # shows up at the bottom of the page
 print("print test")
+try:
+    with open("_hanziWriter.js", "r") as js_file:
+        console.log("_hanziWriter.js loaded successfully")
+except FileNotFoundError:
+    console.error("Could not load _hanziWriter.js")
+print("print test2")
+
 
 # from ui_handler import testFunction
 # no need to import the test function! local functions seem to magically appear in scope
-testFunction()
-from js import document, Uint8Array, File, URL, window, console
-from pyodide.ffi import create_proxy
+# testFunction()
+
+from js import document, Uint8Array, File, URL, window, console, fetch, validateForm
+from pyodide.ffi import create_proxy, to_js
 import io
 import genanki
 import random
-import requests
+# import requests
 
 # Import the UI functions
 # from ui_handler import update_error_messages, update_vocabulary_table, update_statistics
@@ -20,19 +28,41 @@ decks = {}
 errorTermsList = []
 vocabulary_data = []
 
-def getStrokeData(character = "我"):
+async def getStrokeData(character = "我"):
     url = f"https://cdn.jsdelivr.net/npm/hanzi-writer-data@latest/{character}.json"
-    response = requests.get(url)
-    jsonData = response.content
-    jsonData = jsonData.decode()
-
-    # if its not a chinese character, then returns None
-    if "Couldn't find the requested file" in jsonData:
-        console.log("could not find file for " + character + "; skipping this character")
+    try:
+        # Make the fetch request
+        response = await fetch(url)
+        
+        # Check if the response is OK (status 200)
+        if not response.ok:
+            console.log(f"Could not find file for {character}; skipping this character")
+            return None
+        
+        # Read the response content as text
+        json_data = await response.text()
+        
+        # Check if the response contains an error message
+        if "Couldn't find the requested file" in json_data:
+            console.log(f"Could not find file for {character}; skipping this character")
+            return None
+        
+        return json_data
+    
+    except Exception as e:
+        console.error(f"Error fetching stroke data for {character}: {str(e)}")
         return None
-    return jsonData
+    # response = requests.get(url)
+    # jsonData = response.content
+    # jsonData = jsonData.decode()
 
-def process_file(file_content, textbook_name, lesson_name):
+    # # if its not a chinese character, then returns None
+    # if "Couldn't find the requested file" in jsonData:
+    #     console.log("could not find file for " + character + "; skipping this character")
+    #     return None
+    # return jsonData
+
+async def process_file(file_content, textbook_name, lesson_name):
     global decks, errorTermsList, vocabulary_data
     
     # Reset global variables
@@ -45,7 +75,7 @@ def process_file(file_content, textbook_name, lesson_name):
     messages.append(f"Processing file for {textbook_name}: {lesson_name}")
     
     # Set up outer deck name
-    outerDeckName = f"Chinese::{textbook_name}" if textbook_name else "Chinese"
+    outerDeckName = f"{textbook_name}" if textbook_name else "Chinese"
     
     # Process the file content line by line
     lines = file_content.split('\n')
@@ -130,7 +160,7 @@ def process_file(file_content, textbook_name, lesson_name):
             currentDeckName = lesson_name if lesson_name else "Vocabulary"
 
         # format for hanzi writer + my template
-        def getCardFrontBack():
+        async def getCardFrontBack():
             front = f"{definition}"
             if examplesExist: front += f"<br>(phrases: {exampleEnglish})"
 
@@ -143,14 +173,14 @@ def process_file(file_content, textbook_name, lesson_name):
 
             # add the stroke order data in an invisible div
             for character in hanzi:
-                strokeJsonData = getStrokeData(character)
+                strokeJsonData = await getStrokeData(character)
                 if strokeJsonData == None: continue
                 back += f'<div id="{character}" style="display:none">{strokeJsonData}</div>'
             
             return (front, back)
 
         # Get card front and back content
-        front, back = getCardFrontBack()
+        front, back = await getCardFrontBack()
         
         # Store in decks dictionary
         if (currentDeckName not in decks): 
@@ -171,7 +201,9 @@ def process_file(file_content, textbook_name, lesson_name):
     # Enable download button if we have cards
     if stats['total_cards'] > 0:
         download_btn = document.getElementById("download-btn")
-        download_btn.disabled = False
+        
+        # download_btn.disabled = not validateForm()
+        validateForm() # automatically enables or disables the download button
         # Set up download button event listener
         download_btn.addEventListener("click", create_proxy(generate_and_download_anki_package))
 
@@ -179,12 +211,12 @@ def generate_and_download_anki_package(event):
     # Get deck metadata
     textbook_name = document.getElementById("textbook-name").value
     lesson_name = document.getElementById("lesson-name").value
-    outerDeckName = f"Chinese::{textbook_name}" if textbook_name else "Chinese"
+    outerDeckName = f"{textbook_name}" if textbook_name else "Chinese"
     
     try:
         # Card template setup
         model_id = 1956882460  # Template ID
-        model_name = "Chinese Vocabulary Template"
+        model_name = "Kabir's Chinese Card Template"
 
         # Try to read template files, or use defaults if files don't exist
         try:
@@ -279,13 +311,13 @@ def generate_and_download_anki_package(event):
         update_error_messages([f"Error generating Anki package: {str(e)}"])
 
 # Connect to UI handler
-def handle_file_from_ui(file_text, file_name):
+async def handle_file_from_ui(file_text, file_name):
     # Get deck metadata
     textbook_name = document.getElementById("textbook-name").value
     lesson_name = document.getElementById("lesson-name").value
     
     # Process the file
-    process_file(file_text, textbook_name, lesson_name)
+    await process_file(file_text, textbook_name, lesson_name)
     
     return {
         'status': 'success',

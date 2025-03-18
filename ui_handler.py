@@ -1,5 +1,5 @@
-def testFunction():
-    print("test function called")
+# def testFunction():
+#     print("test function called")
 from js import document, File, console
 from pyodide.ffi import create_proxy
 import asyncio
@@ -41,7 +41,7 @@ async def handle_file_upload(event):
         # Use the main module to process the file
         try:
             # result = main.handle_file_from_ui(text, file.name)
-            result = handle_file_from_ui(text, file.name)
+            result = await handle_file_from_ui(text, file.name)
             console.log(f"File processing result: {result}")
             
             # Show initial upload success message

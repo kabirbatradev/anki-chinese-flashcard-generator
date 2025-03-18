@@ -10,7 +10,7 @@
     
     <!-- PyScript -->
     <script type="module" src="https://pyscript.net/releases/2024.1.1/core.js"></script>
-
+    
     <!-- Custom styles -->
     <style>
         .drag-drop-zone {
@@ -62,6 +62,14 @@
             }
         });
     </script>
+
+    <!-- load the hanzi writer to be used in main.py -->
+    <script src="_hanziWriter.js"></script>
+
+    <!-- <py-config>
+        files = ["./_hanziWriter.js"]
+    </py-config> -->
+
 </head>
 <body class="bg-gray-50 min-h-screen">
     <!-- Loading Indicator -->
@@ -142,6 +150,23 @@
                 </div>
             </section>
 
+            <!-- Download Section -->
+            <section class="bg-white p-6 rounded-lg shadow-md">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <h2 class="text-2xl font-semibold mb-2 text-gray-700">Generate Deck</h2>
+                        <div id="statistics" class="text-sm text-gray-600">
+                            <!-- Statistics will be inserted here -->
+                        </div>
+                    </div>
+                    <button id="download-btn"
+                            class="bg-green-500 text-white px-8 py-3 rounded-md hover:bg-green-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                            disabled>
+                        Download Deck
+                    </button>
+                </div>
+            </section>
+
             <!-- Data Table Section -->
             <section class="bg-white p-6 rounded-lg shadow-md overflow-x-auto">
                 <h2 class="text-2xl font-semibold mb-4 text-gray-700">Vocabulary Preview</h2>
@@ -171,22 +196,7 @@
                 </table>
             </section>
 
-            <!-- Download Section -->
-            <section class="bg-white p-6 rounded-lg shadow-md">
-                <div class="flex justify-between items-center">
-                    <div>
-                        <h2 class="text-2xl font-semibold mb-2 text-gray-700">Generate Deck</h2>
-                        <div id="statistics" class="text-sm text-gray-600">
-                            <!-- Statistics will be inserted here -->
-                        </div>
-                    </div>
-                    <button id="download-btn"
-                            class="bg-green-500 text-white px-8 py-3 rounded-md hover:bg-green-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                            disabled>
-                        Download Deck
-                    </button>
-                </div>
-            </section>
+            
         </div>
     </div>
 

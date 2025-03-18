@@ -52,19 +52,9 @@ function initializeUI() {
         fileInput.click();
     });
 
-    // Form validation
+
     const textbookName = document.getElementById('textbook-name');
     const lessonName = document.getElementById('lesson-name');
-    const downloadBtn = document.getElementById('download-btn');
-
-    function validateForm() {
-        const isValid = textbookName.value.trim() !== '' && 
-                       lessonName.value.trim() !== '' && 
-                       fileInput.files && fileInput.files.length > 0;
-        if (downloadBtn) {
-            downloadBtn.disabled = !isValid;
-        }
-    }
 
     textbookName.addEventListener('input', validateForm);
     lessonName.addEventListener('input', validateForm);
@@ -72,8 +62,30 @@ function initializeUI() {
         console.log('File input changed', e);
         validateForm();
     });
-    
+
     console.log('UI initialization complete');
+}
+
+function validateForm() {
+    console.log('Validating form');
+    const textbookName = document.getElementById('textbook-name');
+    const lessonName = document.getElementById('lesson-name');
+    const downloadBtn = document.getElementById('download-btn');
+    const vocabularyTableBody = document.getElementById('vocabulary-table-body');
+    const fileInput = document.getElementById('file-input');
+
+    // Check if we have at least one vocabulary item
+    const hasVocabularyData = vocabularyTableBody && vocabularyTableBody.children.length > 0;
+    console.log('Vocabulary table rows:', vocabularyTableBody ? vocabularyTableBody.children.length : 0);
+
+    const isValid = textbookName.value.trim() !== '' && 
+                   lessonName.value.trim() !== '' && 
+                   fileInput.files && fileInput.files.length > 0 &&
+                   hasVocabularyData;
+
+    if (downloadBtn) {
+        downloadBtn.disabled = !isValid;
+    }
 }
 
 // Set up event listeners for when both DOM and PyScript are ready
