@@ -161,7 +161,7 @@ async def process_file(file_content, textbook_name, lesson_name):
             front = f"{definition}"
             if examplesExist: front += f"<br>(phrases: {exampleEnglish})"
 
-            back = f"{hanzi} {pinyin}"
+            back = f"{hanzi}<br>{pinyin}"
             if examplesExist: back += f"<br>(phrases: {exampleChinese})"
             back += "<br>"
 
