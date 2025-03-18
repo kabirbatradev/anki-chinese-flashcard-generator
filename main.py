@@ -103,6 +103,12 @@ async def process_file(file_content, textbook_name, lesson_name):
             deckName = lineParts[0]
             messages.append(f"Found deck section: {deckName}")
             currentDeckName = deckName
+            
+            # Add a divider entry for the new deck
+            vocab_item = {
+                "deck_name": deckName,
+            }
+            vocabulary_data.append(vocab_item)
             continue
 
         # otherwise, this is a vocab term
@@ -126,7 +132,7 @@ async def process_file(file_content, textbook_name, lesson_name):
             exampleEnglish = vocabTerm[4]
         elif len(vocabTerm) == 3:
             examplesExist = False
-            errorMsg = f"Note: Term '{hanzi}' has no examples, but this might be intentional"
+            errorMsg = f"Warning: Term '{hanzi}' has no examples, but this might be intentional"
             messages.append(errorMsg)
             errorTermsList.append((hanzi, pinyin, len(vocabTerm)))
             exampleChinese = ""
@@ -322,8 +328,9 @@ async def handle_file_from_ui(file_text, file_name):
     # Process the file
     await process_file(file_text, textbook_name, lesson_name)
     
+    vocab_count = len([item for item in vocabulary_data if "deck_name" not in item])
     return {
         'status': 'success',
         'message': f'Processed file: {file_name}',
-        'vocab_count': len(vocabulary_data)
+        'vocab_count': vocab_count
     }

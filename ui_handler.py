@@ -5,6 +5,9 @@ from pyodide.ffi import create_proxy
 import asyncio
 
 async def handle_file_upload(event):
+    # clear the error messages
+    clear_error_messages()
+    
     try:
         console.log("File upload event triggered")
         if not event.target.files or event.target.files.length == 0:
@@ -53,14 +56,20 @@ async def handle_file_upload(event):
         console.error(f"Unexpected error in handle_file_upload: {str(e)}")
         update_error_messages([f"Unexpected error: {str(e)}"])
 
+def clear_error_messages():
+    error_div = document.getElementById("error-messages")
+    error_div.innerHTML = ""
+
 def update_error_messages(messages):
     error_div = document.getElementById("error-messages")
     # error_div.innerHTML = ""
     for message in messages:
         msg_elem = document.createElement("div")
-        msg_elem.className = "p-4 mb-2 text-sm rounded-lg"
+        msg_elem.className = "px-4 py-2 mb-2 text-sm rounded-lg"
         if "error" in message.lower():
             msg_elem.className += " bg-red-100 text-red-700"
+        elif "warning" in message.lower():
+            msg_elem.className += " bg-orange-100 text-orange-700"
         else:
             msg_elem.className += " bg-blue-100 text-blue-700"
         msg_elem.textContent = message
@@ -71,12 +80,19 @@ def update_vocabulary_table(data):
     tbody.innerHTML = ""
     for item in data:
         row = document.createElement("tr")
-        for field in [item["english"], item["chinese"], item["pinyin"], 
-                     item["example_en"], item["example_cn"]]:
+        if "deck_name" in item:
             cell = document.createElement("td")
-            cell.className = "px-6 py-4 whitespace-nowrap text-sm text-gray-900"
-            cell.textContent = field
+            cell.colSpan = 5  # Assuming there are 5 columns in the table
+            cell.className = "px-6 py-4 whitespace-nowrap text-lg text-gray-900 bg-gray-300"
+            cell.textContent = item["deck_name"]
             row.appendChild(cell)
+        else:
+            for field in [item["english"], item["chinese"], item["pinyin"], 
+                     item["example_en"], item["example_cn"]]:
+                cell = document.createElement("td")
+                cell.className = "px-6 py-4 whitespace-nowrap text-sm text-gray-900"
+                cell.textContent = field
+                row.appendChild(cell)
         tbody.appendChild(row)
 
 def update_statistics(stats):
