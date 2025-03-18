@@ -1,0 +1,151 @@
+{{FrontSide}}
+
+<hr id=answer>
+
+{{Back}}
+
+<div id="test" class="card">template failed to read hanzi</div>
+<div class="outerBox">
+    <div id="hanziAnimationDiv" style="background-color: #5e5e5e;"></div>
+</div>
+
+<script>
+    var characterData = {}
+</script>
+
+
+<script>
+
+var isMobile = document.documentElement.classList.contains("mobile")
+
+
+
+var hanziCharacters = document.getElementById('hanzi').innerHTML;
+if (hanziCharacters == "") hanziCharacters = "我"; // default to wo if the card's <div id="hanzi" style="display:none"> is empty
+    // hanziCharacters = "我"; // hardcode for testing
+
+// document.getElementById('test').innerHTML = hanziCharacters + " were read by template";
+document.getElementById('test').style.display = "none";
+// disable this element (only show if something broke)
+    
+
+// each character should have a div like this:
+// <div id="{character}">{strokeJsonData}</div>'
+for (var character of hanziCharacters) {
+    var jsonDiv = document.getElementById(character);
+    characterData[character] = JSON.parse(jsonDiv.innerHTML);
+}
+
+var writers = []
+
+function hanziWriterOnload() {
+    drawCharacters();
+    initializeButtonState();
+}
+// drawCharacters();
+
+
+
+function drawCharacters() {
+
+    writers = []
+
+    // at this point, all scripts for the hanzi characters should have loaded
+    // characterData["insert chinese character"] will give the json data
+
+    
+    var characters = hanziCharacters.split("")
+    for (x of characters) {
+        var writer = HanziWriter.create('hanziAnimationDiv', x, {
+            charDataLoader: function() {
+                return characterData[x];
+            },
+            width: 80,
+            height: 80,
+            padding: 5,   
+            showOutline: true,
+            strokeAnimationSpeed: 1, 
+            delayBetweenLoops: 500, // default is 2000 ms
+            delayBetweenStrokes: 150, // milliseconds
+            strokeFadeDuration: 200, // default 400 ms
+            outlineColor: '#1e1e1e', // background outline, dark gray
+            strokeColor: '#e4e4e4', // off color white
+            radicalColor: '#bb86fc' // purple ish
+        });
+        writer.loopCharacterAnimation();
+        writers.push(writer)
+        // writer.updateDimensions({width: 160, height: 160})
+    }
+
+
+
+    // add ability to tap a character to restart the stroke order animation
+    var hanziAnimationDiv = document.getElementById('hanziAnimationDiv');
+    // for (let svgElement of hanziAnimationDiv.children) {
+
+    console.log(hanziAnimationDiv.children.length)
+    for (var i = 0; i < hanziAnimationDiv.children.length; i++) {
+        var svgElement = hanziAnimationDiv.children[i]
+        console.log(svgElement.tagName);
+        var writer = writers[i];
+        svgElement.id = "" + i;
+        svgElement.onclick = (event) => {
+            let thisSvgElement = event.currentTarget; // get this svg element, not a child path element that we clicked on
+            let index = parseInt(thisSvgElement.id)
+            writers[index].hideCharacter();
+            writers[index].loopCharacterAnimation();
+        }
+    }
+
+
+}
+
+
+// create functions for making the hanzi small or large sized
+function small() {
+    for (let w of writers) {
+        w.updateDimensions({width: 80, height: 80})
+    }
+    // writer.updateDimensions({width: 80, height: 80})
+
+    document.getElementById("small").style.display = "none"
+    document.getElementById("large").style.display = "flex"
+}
+
+function large() {
+    for (let w of writers) {
+        w.updateDimensions({width: 160, height: 160})
+    }
+    // writer.updateDimensions({width: 160, height: 160})
+
+    document.getElementById("small").style.display = "flex"
+    document.getElementById("large").style.display = "none"
+}
+
+function initializeButtonState() {
+    if (isMobile) {
+        small()
+    }
+    else {
+        large()
+    }
+}
+
+
+</script>
+
+
+<!-- <div>
+    imagine a slider here
+</div> -->
+
+<div class="buttonContainer">
+    <div id="small" class="changeSizeButton" onclick="small()" style="display:none">小</div>
+    <div id="large" class="changeSizeButton" onclick="large()" style="display:none">大</div>
+</div>
+
+
+<script src="_hanziWriter.js" onload="hanziWriterOnload()"></script>
+
+
+
