@@ -1,3 +1,3 @@
 packages = [ "genanki", "sqlite3" ]
 
-files = ["_hanziWriter.js", "BackTemplateNoStrokeData.html", "FrontTemplate.html", "TemplateStyling.css"]
+files = ["_hanziWriter.js"]

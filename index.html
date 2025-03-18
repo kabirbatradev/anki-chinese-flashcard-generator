@@ -73,6 +73,39 @@
     <!-- load the hanzi writer to be used in main.py -->
     <script src="_hanziWriter.js"></script>
 
+    <script>
+        async function loadFile(fileName) {
+          try {
+            const response = await fetch(fileName);
+            if (!response.ok) {
+              console.error(`Failed to load ${fileName}: ${response.statusText}`);
+              return null;
+            }
+            const content = await response.text();
+            console.log(`${fileName} loaded successfully`);
+            return content;
+          } catch (error) {
+            console.error(`Error loading ${fileName}:`, error);
+            return null;
+          }
+        }
+      
+        async function loadFilesIntoPyScript() {
+          const frontTemplate = await loadFile("FrontTemplate.html");
+          const backTemplate = await loadFile("BackTemplateNoStrokeData.html");
+          const templateStyling = await loadFile("TemplateStyling.css");
+          console.log(backTemplate)
+
+          // Pass the loaded content to PyScript
+          window.frontTemplate = frontTemplate;
+          window.backTemplate = backTemplate;
+          window.templateStyling = templateStyling; 
+        }
+      
+        // Load files when the page loads
+        loadFilesIntoPyScript();
+      </script>
+
     <!-- <py-config>
         files = ["./_hanziWriter.js"]
     </py-config> -->
