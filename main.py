@@ -1,13 +1,10 @@
 from pyscript import display
 # display("display test") # shows up at the bottom of the page
-print("print test")
 try:
     with open("_hanziWriter.js", "r") as js_file:
         console.log("_hanziWriter.js loaded successfully")
 except FileNotFoundError:
     console.error("Could not load _hanziWriter.js")
-print("print test2")
-
 
 # from ui_handler import testFunction
 # no need to import the test function! local functions seem to magically appear in scope
@@ -28,39 +25,39 @@ decks = {}
 errorTermsList = []
 vocabulary_data = []
 
-async def getStrokeData(character = "我"):
-    url = f"https://cdn.jsdelivr.net/npm/hanzi-writer-data@latest/{character}.json"
-    try:
-        # Make the fetch request
-        response = await fetch(url)
+# async def getStrokeData(character = "我"):
+#     url = f"https://cdn.jsdelivr.net/npm/hanzi-writer-data@latest/{character}.json"
+#     try:
+#         # Make the fetch request
+#         response = await fetch(url)
         
-        # Check if the response is OK (status 200)
-        if not response.ok:
-            console.log(f"Could not find file for {character}; skipping this character")
-            return None
+#         # Check if the response is OK (status 200)
+#         if not response.ok:
+#             console.log(f"Could not find file for {character}; skipping this character")
+#             return None
         
-        # Read the response content as text
-        json_data = await response.text()
+#         # Read the response content as text
+#         json_data = await response.text()
         
-        # Check if the response contains an error message
-        if "Couldn't find the requested file" in json_data:
-            console.log(f"Could not find file for {character}; skipping this character")
-            return None
+#         # Check if the response contains an error message
+#         if "Couldn't find the requested file" in json_data:
+#             console.log(f"Could not find file for {character}; skipping this character")
+#             return None
         
-        return json_data
+#         return json_data
     
-    except Exception as e:
-        console.error(f"Error fetching stroke data for {character}: {str(e)}")
-        return None
-    # response = requests.get(url)
-    # jsonData = response.content
-    # jsonData = jsonData.decode()
+#     except Exception as e:
+#         console.error(f"Error fetching stroke data for {character}: {str(e)}")
+#         return None
+#     # response = requests.get(url)
+#     # jsonData = response.content
+#     # jsonData = jsonData.decode()
 
-    # # if its not a chinese character, then returns None
-    # if "Couldn't find the requested file" in jsonData:
-    #     console.log("could not find file for " + character + "; skipping this character")
-    #     return None
-    # return jsonData
+#     # # if its not a chinese character, then returns None
+#     # if "Couldn't find the requested file" in jsonData:
+#     #     console.log("could not find file for " + character + "; skipping this character")
+#     #     return None
+#     # return jsonData
 
 async def process_file(file_content, textbook_name, lesson_name):
     global decks, errorTermsList, vocabulary_data
@@ -172,10 +169,11 @@ async def process_file(file_content, textbook_name, lesson_name):
             front += f'<div id="hanzi" style="display:none">{hanzi.replace("（", "").replace("）", "")}</div>'
 
             # add the stroke order data in an invisible div
-            for character in hanzi:
-                strokeJsonData = await getStrokeData(character)
-                if strokeJsonData == None: continue
-                back += f'<div id="{character}" style="display:none">{strokeJsonData}</div>'
+            # no need for this anymore, as we fetch stroke data within the card template
+            # for character in hanzi:
+            #     strokeJsonData = await getStrokeData(character)
+            #     if strokeJsonData == None: continue
+            #     back += f'<div id="{character}" style="display:none">{strokeJsonData}</div>'
             
             return (front, back)
 
