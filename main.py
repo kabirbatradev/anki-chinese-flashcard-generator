@@ -1,29 +1,20 @@
 from pyscript import display
-
-display("testing the display function")
-print("testing a print statement") # converts to console.log
-
-
-
-
-
-# write the name of the vocab list here: 
-# Example: vocabListFileName = "Lesson 1.txt"
-outerDeckName = "Chinese::Lesson 10" # should get this from the website
-vocabListFileName = "L10 Vocab List Updated.txt" # should get this from the website
-# note that only txt files work
-
-# import html
-import requests
+from js import document, Uint8Array, File, URL, window, console
+from pyodide.ffi import create_proxy
+import io
 import genanki
 import random
+import requests
 
-    
+# Import the UI functions
+from ui_handler import update_error_messages, update_vocabulary_table, update_statistics
+
+# Global variables
+decks = {}
+errorTermsList = []
+vocabulary_data = []
+
 def getStrokeData(character = "我"):
-    # if character in "（）":
-    #     # skip because its just a parenthesis
-    #     return None
-
     url = f"https://cdn.jsdelivr.net/npm/hanzi-writer-data@latest/{character}.json"
     response = requests.get(url)
     jsonData = response.content
@@ -31,327 +22,267 @@ def getStrokeData(character = "我"):
 
     # if its not a chinese character, then returns None
     if "Couldn't find the requested file" in jsonData:
-        print("could not find file for " + character + "; skipping this character")
+        console.log("could not find file for " + character + "; skipping this character")
         return None
     return jsonData
 
-# test
-# print("testing getStrokeData", getStrokeData("（"))
-
-vocabListFile = open(vocabListFileName, "r", encoding="utf8") # "r" means read
-# print(file.read())
-
-# 'deckname': [('front', 'back'), ('front', 'back'), ...)]
-decks = {}
-writeToFiles = False
-
-# new file is created whenever a new section is reached in the file
-ankiDeckFile = None
-currentDeckName = None
-
-# keep track of all terms with errors to print them at the end
-errorTermsList = []
-
-# each line has a new line at the end of it already
-for line in vocabListFile:
-
-    # if a line is empty, then skip it 
-    if line == "\n": 
-        # print("empty line")
-        continue
+def process_file(file_content, textbook_name, lesson_name):
+    global decks, errorTermsList, vocabulary_data
     
-    # split the line into parts by semicolon or colon
-    chineseSemicolon = "；"
-    normalSemicolon = ";"
-    colon = ":"
-
-    # replace occurences of colon or chinese semicolon with normal semicolon
-    line = line.replace(chineseSemicolon, normalSemicolon)
-    line = line.replace(colon, normalSemicolon)
-    # then split by semicolon
-    lineParts = line.split(normalSemicolon)
-
-    # strip/trim off any learning or trailing whitespace from each part
-    for i in range(len(lineParts)):
-        lineParts[i] = lineParts[i].strip()
-
-
+    # Reset global variables
+    decks = {}
+    errorTermsList = []
+    vocabulary_data = []
     
-    # if a line does not have any semicolons, it must be the title of a new deck
-    if len(lineParts) == 1:
-        deckName = lineParts[0]
-        # deckName = deckName.replace(' ', ' ') # attempt to replace chinese space with regular space
-        print("NEW DECK:", deckName)
-
-        # if we already have a file open, then close it before creating a new file
-        if currentDeckName != None:
-            if writeToFiles: ankiDeckFile.close()
-        
-        # create a new file for this new deck
-        if writeToFiles: ankiDeckFile = open(deckName + ".txt", "w", encoding="utf8")
-        currentDeckName = deckName
-        
-        continue
-
-    # otherwise, this is a vocab term
-    vocabTerm = lineParts
-
+    # Process messages to display to user
+    messages = []
+    messages.append(f"Processing file for {textbook_name}: {lesson_name}")
     
+    # Set up outer deck name
+    outerDeckName = f"Chinese::{textbook_name}" if textbook_name else "Chinese"
     
-    # print(vocabTerm)
-    hanzi = vocabTerm[0]
-    print('downloading ', hanzi)
-    pinyin = vocabTerm[1]
-    definition = vocabTerm[2]
-    examplesExist = True
-    if len(vocabTerm) == 5:
-        exampleChinese = vocabTerm[3]
-        exampleEnglish = vocabTerm[4] # chinese example translated into english
-        # examplesExist = True
-    elif len(vocabTerm) == 3:
-        examplesExist = False
-        print("this term seems to not have examples, but it might be an error")
-        errorTermsList.append((hanzi, pinyin, len(vocabTerm)))
-    else:
+    # Process the file content line by line
+    lines = file_content.split('\n')
+    currentDeckName = None
+    
+    for line in lines:
+        # if a line is empty, then skip it 
+        if not line.strip(): 
+            continue
         
-        print(f"ERROR: len of vocabTerm is {len(vocabTerm)} for word: {hanzi} {pinyin}")
-        print(f"(This means it might be missing pinyin or english translation of examples)")
-        errorTermsList.append((hanzi, pinyin, len(vocabTerm)))
+        # split the line into parts by semicolon or colon
+        chineseSemicolon = "；"
+        normalSemicolon = ";"
+        colon = ":"
+
+        # replace occurences of colon or chinese semicolon with normal semicolon
+        line = line.replace(chineseSemicolon, normalSemicolon)
+        line = line.replace(colon, normalSemicolon)
+        # then split by semicolon
+        lineParts = line.split(normalSemicolon)
+
+        # strip/trim off any learning or trailing whitespace from each part
+        for i in range(len(lineParts)):
+            lineParts[i] = lineParts[i].strip()
         
-    # print("hanzi:", hanzi)
-    # print("pinyin:", pinyin)
+        # if a line does not have any semicolons, it must be the title of a new deck
+        if len(lineParts) == 1:
+            deckName = lineParts[0]
+            messages.append(f"Found deck section: {deckName}")
+            currentDeckName = deckName
+            continue
 
-
-    # if no file was opened, then this vocab term comes before something like "Text 1" to label the deck
-    if currentDeckName == None:
-        if writeToFiles: ankiDeckFile = open("NoDeckName.txt", 'w', encoding="utf8")
-        currentDeckName = "NoDeckName"
+        # otherwise, this is a vocab term
+        vocabTerm = lineParts
         
-
-
-    # format for hanzi writer + my template
-    def getCardFrontBack():
-
-        front = f"{definition}"
-        if examplesExist: front += f"<br>(phrases: {exampleEnglish})"
-
-        back = f"{hanzi} {pinyin}"
-        if examplesExist: back += f"<br>(phrases: {exampleChinese})"
-        back += "<br>"
-
-        # format for the back side:
-        # <div id="hanzi" style="display:none">我是钢琴</div>
-        # <img src="我.js" style="display:none">
-            # for each hanzi
-
-        back += f'<div id="hanzi" style="display:none">{hanzi.replace("（", "").replace("）", "")}</div>'
-        # add the hanzi to the front too so we can potentially add hanzi writer quiz
-        front += f'<div id="hanzi" style="display:none">{hanzi.replace("（", "").replace("）", "")}</div>'
-
-        # add the stroke order data in an invisible div
-        for character in hanzi:
-            # no need to add the dummy image to trick anki into thinking the character js is a dependency
-            # back += f'<img src="{character}.js" style="display:none">'
-            # downloadStrokeData(character)
-
-            strokeJsonData = getStrokeData(character)
-            if strokeJsonData == None: continue
-            back += f'<div id="{character}" style="display:none">{strokeJsonData}</div>'
+        hanzi = vocabTerm[0]
+        messages.append(f"Processing term: {hanzi}")
         
-        return (front, back)
-        # ankiDeckFile.write(front + ";" + back + "\n")
+        if len(vocabTerm) < 3:
+            errorMsg = f"ERROR: Term '{hanzi}' has too few parts ({len(vocabTerm)}), need at least 3 (hanzi, pinyin, definition)"
+            messages.append(errorMsg)
+            errorTermsList.append((hanzi, "", len(vocabTerm)))
+            continue
+            
+        pinyin = vocabTerm[1]
+        definition = vocabTerm[2]
+        examplesExist = True
+        
+        if len(vocabTerm) == 5:
+            exampleChinese = vocabTerm[3]
+            exampleEnglish = vocabTerm[4]
+        elif len(vocabTerm) == 3:
+            examplesExist = False
+            errorMsg = f"Note: Term '{hanzi}' has no examples, but this might be intentional"
+            messages.append(errorMsg)
+            errorTermsList.append((hanzi, pinyin, len(vocabTerm)))
+            exampleChinese = ""
+            exampleEnglish = ""
+        else:
+            errorMsg = f"ERROR: Term '{hanzi}' has unexpected number of parts ({len(vocabTerm)})"
+            messages.append(errorMsg)
+            errorTermsList.append((hanzi, pinyin, len(vocabTerm)))
+            if len(vocabTerm) >= 4:
+                exampleChinese = vocabTerm[3]
+                exampleEnglish = "" if len(vocabTerm) < 5 else vocabTerm[4]
+            else:
+                exampleChinese = ""
+                exampleEnglish = ""
 
-    # writeToFileHanziWriterFormat()
-    front, back = getCardFrontBack()
-    if writeToFiles: ankiDeckFile.write(front + ";" + back + "\n")
-    if (currentDeckName not in decks): decks[currentDeckName] = []
-    decks[currentDeckName].append((front, back))
+        # Add to vocabulary data for display in table
+        vocab_item = {
+            "english": definition,
+            "chinese": hanzi,
+            "pinyin": pinyin,
+            "example_en": exampleEnglish,
+            "example_cn": exampleChinese
+        }
+        vocabulary_data.append(vocab_item)
 
-# decks dictionary
-# each deck should contain a list of tuples: front and back of card
+        # if no deck was specified, use default
+        if currentDeckName is None:
+            currentDeckName = lesson_name if lesson_name else "Vocabulary"
 
-# https://github.com/AnKing-VIP/advanced-browser
-# https://ankiweb.net/shared/info/874215009
-# use this addon to get internal information on cards
-# including the note type id aka model id
-# this will allow me to overwrite the old model on lesson 8
-# (because it will have the same id)
-# nvm this
+        # format for hanzi writer + my template
+        def getCardFrontBack():
+            front = f"{definition}"
+            if examplesExist: front += f"<br>(phrases: {exampleEnglish})"
 
-# old model id: 1607392319
-# updating the model id will create a new model (card template)
+            back = f"{hanzi} {pinyin}"
+            if examplesExist: back += f"<br>(phrases: {exampleChinese})"
+            back += "<br>"
 
-model_id = 1956882460  # make a new id for new template (no stroke data)
-# random.randrange(1 << 30, 1 << 31)
-# deck_ids = [1567115450, 1705746358, 1152996867, 1085417380]
-model_name = "Kabir's Chinese Card Template"
+            back += f'<div id="hanzi" style="display:none">{hanzi.replace("（", "").replace("）", "")}</div>'
+            front += f'<div id="hanzi" style="display:none">{hanzi.replace("（", "").replace("）", "")}</div>'
 
+            # add the stroke order data in an invisible div
+            for character in hanzi:
+                strokeJsonData = getStrokeData(character)
+                if strokeJsonData == None: continue
+                back += f'<div id="{character}" style="display:none">{strokeJsonData}</div>'
+            
+            return (front, back)
 
-frontTemplateFileString = open("FrontTemplate.html", "r", encoding="utf8").read()
-backTemplateFileString = open("BackTemplate.html", "r", encoding="utf8").read()
-templateStylingFileString = open("TemplateStyling.css", "r", encoding="utf8").read()
+        # Get card front and back content
+        front, back = getCardFrontBack()
+        
+        # Store in decks dictionary
+        if (currentDeckName not in decks): 
+            decks[currentDeckName] = []
+        decks[currentDeckName].append((front, back))
 
+    # Update UI with processed data
+    update_error_messages(messages)
+    update_vocabulary_table(vocabulary_data)
+    
+    stats = {
+        'total_cards': sum(len(cards) for cards in decks.values()),
+        'success': sum(len(cards) for cards in decks.values()) - len(errorTermsList),
+        'warnings': len(errorTermsList)
+    }
+    update_statistics(stats)
+    
+    # Enable download button if we have cards
+    if stats['total_cards'] > 0:
+        download_btn = document.getElementById("download-btn")
+        download_btn.disabled = False
+        # Set up download button event listener
+        download_btn.addEventListener("click", create_proxy(generate_and_download_anki_package))
 
-# create the model aka template
-my_model = genanki.Model(
-    model_id,
-    model_name,
-    fields=[
-        {"name": "Front"},
-        {"name": "Back"},
-    ],
-    templates=[
-        {
-            "name": "Card 1",
-            "qfmt": frontTemplateFileString,
-            "afmt": backTemplateFileString,
-        },
-    ],
-    css=templateStylingFileString
-)
-# make sure to use a unique model id:
-# import random; random.randrange(1 << 30, 1 << 31)
-# and hardcode it into your Model definition.
+def generate_and_download_anki_package(event):
+    # Get deck metadata
+    textbook_name = document.getElementById("textbook-name").value
+    lesson_name = document.getElementById("lesson-name").value
+    outerDeckName = f"Chinese::{textbook_name}" if textbook_name else "Chinese"
+    
+    try:
+        # Card template setup
+        model_id = 1956882460  # Template ID
+        model_name = "Chinese Vocabulary Template"
 
-# create a new note:
-# my_note = genanki.Note(
-#     model=my_model, 
-#     fields=["Capital of Argentina", "Buenos Aires"]
-# )
+        # Try to read template files, or use defaults if files don't exist
+        try:
+            frontTemplateFileString = open("FrontTemplate.html", "r", encoding="utf8").read()
+            backTemplateFileString = open("BackTemplate.html", "r", encoding="utf8").read()
+            templateStylingFileString = open("TemplateStyling.css", "r", encoding="utf8").read()
+        except:
+            # Use default templates if files not found
+            frontTemplateFileString = "{{Front}}"
+            backTemplateFileString = "{{FrontSide}}<hr id='answer'>{{Back}}"
+            templateStylingFileString = ".card { font-family: arial; font-size: 20px; text-align: center; }"
 
-allGenAnkiDecks = []
-for deckName in decks.keys():
-    deckFullName = f"{outerDeckName}::{deckName}"
-    deckId = random.randrange(1 << 30, 1 << 31) # deck id is always new
-    print("NEW DECK:", deckFullName)
-
-    # create the new deck
-    my_deck = genanki.Deck(deckId, deckFullName)
-
-    # (front, back)
-    cards = decks[deckName]
-
-    for front, back in cards:
-        print('adding to anki: ', front[0:15] + "..." if len(front) > 15 else "")
-
-        newCard = genanki.Note(
-            model=my_model, 
-            # fields=[html.escape(front), html.escape(back)]
-            fields=[front, back]
+        # Create the model aka template
+        my_model = genanki.Model(
+            model_id,
+            model_name,
+            fields=[
+                {"name": "Front"},
+                {"name": "Back"},
+            ],
+            templates=[
+                {
+                    "name": "Card 1",
+                    "qfmt": frontTemplateFileString,
+                    "afmt": backTemplateFileString,
+                },
+            ],
+            css=templateStylingFileString
         )
 
-        # add new card to deck
-        my_deck.add_note(newCard)
+        # Generate all decks
+        allGenAnkiDecks = []
+        for deckName in decks.keys():
+            deckFullName = f"{outerDeckName}::{deckName}"
+            deckId = random.randrange(1 << 30, 1 << 31)
+            
+            # Create the new deck
+            my_deck = genanki.Deck(deckId, deckFullName)
+            
+            # Add cards to deck
+            cards = decks[deckName]
+            for front, back in cards:
+                newCard = genanki.Note(
+                    model=my_model, 
+                    fields=[front, back]
+                )
+                my_deck.add_note(newCard)
+            
+            allGenAnkiDecks.append(my_deck)
 
-    allGenAnkiDecks.append(my_deck)
+        # Create package with all decks
+        my_package = genanki.Package(allGenAnkiDecks)
+        
+        # Try to add media files if they exist
+        try:
+            my_package.media_files = ['_hanziWriter.js']
+        except:
+            pass
+            
+        # Generate package filename
+        ankiPackageFileName = f'{outerDeckName.replace("::", " ")} {lesson_name} Anki Package.apkg'
 
-# add all the decks into one package called {outerDeckName}
-my_package = genanki.Package(allGenAnkiDecks)
-my_package.media_files = ['_hanziWriter.js']
-ankiPackageFileName = f'{outerDeckName.replace("::", " ")} Anki Package.apkg'
-# my_package.write_to_file(ankiPackageFileName)
+        # Write to in-memory buffer instead of file
+        buffer = io.BytesIO()
+        my_package.write_to_file(buffer)
+        buffer.seek(0)  # Reset buffer position to the beginning
 
-print("\nCompleted generation of anki package: " + ankiPackageFileName)
+        # Convert the buffer to a format usable in the browser
+        content = buffer.getvalue()
+        content_array = Uint8Array.new(bytearray(content))
 
-print("\nNOTE: terms with errors (they might be missing pinyin, examples, example english translation, or even just a semicolon): ")
-for term in errorTermsList:
-    print(f"hanzi: {term[0]}, pinyin: {term[1]}", end="")
-    if (term[2] == 3): print("; note: this term might simply be missing examples")
-    else: print()
+        # Create a Blob and URL for downloading
+        file = File.new([content_array], ankiPackageFileName, {"type": "application/octet-stream"})
+        url = URL.createObjectURL(file)
 
+        # Trigger download directly
+        download_link = document.createElement("a")
+        download_link.href = url
+        download_link.download = ankiPackageFileName
+        download_link.style.display = "none"
+        document.body.appendChild(download_link)
+        download_link.click()
+        document.body.removeChild(download_link)
+        
+        # Clean up the URL object
+        URL.revokeObjectURL(url)
+        
+        # Update UI with success message
+        update_error_messages([f"Successfully generated Anki package: {ankiPackageFileName}"])
+        
+    except Exception as e:
+        update_error_messages([f"Error generating Anki package: {str(e)}"])
 
-
-
-
-
-
-
-
-# import genanki 
-
-# # how to create a model:
-# my_model = genanki.Model(
-#     1607392310,
-#     "Simple Model",
-#     fields=[
-#         {"name": "Question"},
-#         {"name": "Answer"},
-#     ],
-#     templates=[
-#         {
-#             "name": "Card 1",
-#             "qfmt": "{{Question}}",
-#             "afmt": '{{FrontSide}}<hr id="answer">{{Answer}}',
-#         },
-#     ],
-#     css=\
-# """.card {
-#     font-family: arial;
-#     font-size: 20px;
-#     text-align: center;
-#     color: black;
-#     background-color: white;
-# }"""
-# )
-# # use a unique model id:
-# # import random; random.randrange(1 << 30, 1 << 31)
-# # and hardcode it into your Model definition.
-
-# # create a new note:
-# my_note = genanki.Note(
-#     model=my_model, 
-#     fields=["Capital of Argentina", "Buenos Aires"]
-# )
-
-
-# # make a deck
-# # old deck id:2059400110
-# my_deck = genanki.Deck(2059400110, "Country Capitals")
-
-# my_deck.add_note(my_note)
-
-# this doesnt work in website, need to make fake url
-# genanki.Package(my_deck).write_to_file('output.apkg')
-
-my_deck = ankiPackageFileName
-
-
-
-
-
-
-
-
-
-from pyodide.ffi import create_proxy
-from js import document, Uint8Array, File, URL, window
-import io
-
-# Instead of writing directly to a file, write to an in-memory buffer
-buffer = io.BytesIO()
-genanki.Package(my_deck).write_to_file(buffer)
-buffer.seek(0)  # Reset buffer position to the beginning
-
-# Convert the buffer to a format usable in the browser
-content = buffer.getvalue()
-content_array = Uint8Array.new(bytearray(content))
-
-# Create a Blob and URL for downloading
-file = File.new([content_array], "output.apkg", {type: "application/octet-stream"})
-url = URL.createObjectURL(file)
-
-# Create a download link and trigger it
-download_link = document.createElement("a")
-download_link.href = url
-download_link.download = "output.apkg"
-download_link.innerHTML = "Download Anki Package"
-document.body.appendChild(download_link)
-
-# Optional: Auto-trigger the download without requiring a click
-# download_link.click()
-
-# Clean up the URL object when done
-def cleanup(event):
-    URL.revokeObjectURL(url)
-
-download_link.addEventListener("click", create_proxy(cleanup))
+# Connect to UI handler
+def handle_file_from_ui(file_text, file_name):
+    # Get deck metadata
+    textbook_name = document.getElementById("textbook-name").value
+    lesson_name = document.getElementById("lesson-name").value
+    
+    # Process the file
+    process_file(file_text, textbook_name, lesson_name)
+    
+    return {
+        'status': 'success',
+        'message': f'Processed file: {file_name}',
+        'vocab_count': len(vocabulary_data)
+    }

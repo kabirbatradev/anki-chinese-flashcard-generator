@@ -5,10 +5,19 @@ import asyncio
 async def handle_file_upload(event):
     file = event.target.files[0]
     text = await file.text()
-    console.log("File contents:", text)
-    # TODO: Process the file contents with main.py
-    # For now, just show we received the file
-    update_error_messages(["File received: " + file.name])
+    
+    # Import the main module
+    import main
+    
+    # Get deck metadata
+    textbook_name = document.getElementById("textbook-name").value
+    lesson_name = document.getElementById("lesson-name").value
+    
+    # Use the main module to process the file
+    result = main.handle_file_from_ui(text, file.name)
+    
+    # Show initial upload success message
+    update_error_messages([f"File uploaded: {file.name}", f"Found {result['vocab_count']} vocabulary items"])
 
 def update_error_messages(messages):
     error_div = document.getElementById("error-messages")
@@ -46,4 +55,8 @@ def update_statistics(stats):
 
 # Set up event listeners
 file_input = document.getElementById("file-input")
-file_input.addEventListener("change", create_proxy(handle_file_upload)) 
+file_input.addEventListener("change", create_proxy(handle_file_upload))
+
+# Set up download button
+download_btn = document.getElementById("download-btn")
+download_btn.disabled = True 
