@@ -55,7 +55,7 @@ async def handle_file_upload(event):
 
 def update_error_messages(messages):
     error_div = document.getElementById("error-messages")
-    error_div.innerHTML = ""
+    # error_div.innerHTML = ""
     for message in messages:
         msg_elem = document.createElement("div")
         msg_elem.className = "p-4 mb-2 text-sm rounded-lg"

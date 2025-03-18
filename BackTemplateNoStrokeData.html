@@ -4,23 +4,41 @@
 
 {{Back}}
 
-<div id="test" class="card">template failed to read hanzi</div>
+<div id="test" class="card"></div>
+
+<script>
+//document.getElementById('test').innerHTML = '{{Back}}'.split('<br>')[0]
+
+var hanziCharacters = `{{Back}}`.split('<br>')[0]
+
+var chineseRegex = /\p{sc=Han}/u;
+
+var isChinese = (char) => chineseRegex.test(char);
+
+const filteredText = hanziCharacters.split("").filter(isChinese).join("");
+
+
+//const text = "This text has 一些中文 characters.";
+//var filteredText = hanziCharacters.replace(chineseRegex, (match) => match);
+
+hanziCharacters = filteredText
+
+</script>
+
+
 <div class="outerBox">
     <div id="hanziAnimationDiv" style="background-color: #5e5e5e;"></div>
 </div>
-
-<script>
-    var characterData = {}
-</script>
 
 
 <script>
 
 var isMobile = document.documentElement.classList.contains("mobile")
 
+//var hanziCharacters = document.getElementById('hanzi').innerHTML;
 
+//var hanziCharacters = ""
 
-var hanziCharacters = document.getElementById('hanzi').innerHTML;
 if (hanziCharacters == "") hanziCharacters = "我"; // default to wo if the card's <div id="hanzi" style="display:none"> is empty
     // hanziCharacters = "我"; // hardcode for testing
 
@@ -28,13 +46,6 @@ if (hanziCharacters == "") hanziCharacters = "我"; // default to wo if the card
 document.getElementById('test').style.display = "none";
 // disable this element (only show if something broke)
     
-
-// each character should have a div like this:
-// <div id="{character}">{strokeJsonData}</div>'
-for (var character of hanziCharacters) {
-    var jsonDiv = document.getElementById(character);
-    characterData[character] = JSON.parse(jsonDiv.innerHTML);
-}
 
 var writers = []
 
@@ -50,16 +61,13 @@ function drawCharacters() {
 
     writers = []
 
-    // at this point, all scripts for the hanzi characters should have loaded
-    // characterData["insert chinese character"] will give the json data
-
-    
     var characters = hanziCharacters.split("")
     for (x of characters) {
         var writer = HanziWriter.create('hanziAnimationDiv', x, {
-            charDataLoader: function() {
-                return characterData[x];
-            },
+            // should automatically download the stroke data since we are not providing it
+            //charDataLoader: function() {
+            //    return characterData[x];
+            //},
             width: 80,
             height: 80,
             padding: 5,   
@@ -120,6 +128,7 @@ function large() {
 
     document.getElementById("small").style.display = "flex"
     document.getElementById("large").style.display = "none"
+
 }
 
 function initializeButtonState() {
@@ -136,16 +145,21 @@ function initializeButtonState() {
 
 
 <!-- <div>
-    imagine a slider here
+    imagine a speed slider here
 </div> -->
 
 <div class="buttonContainer">
-    <div id="small" class="changeSizeButton" onclick="small()" style="display:none">小</div>
-    <div id="large" class="changeSizeButton" onclick="large()" style="display:none">大</div>
+    <div id="small" class="changeSizeButton" onclick="small()" style="display:none"></div>
+    <div id="large" class="changeSizeButton" onclick="large()" style="display:none"></div>
 </div>
 
+<script>
+document.getElementById("small").innerHTML = "小"
+document.getElementById("large").innerHTML = "大"
+</script>
 
-<script src="_hanziWriter.js" onload="hanziWriterOnload()"></script>
 
+<!-- <script src="_hanziWriter.js" onload="hanziWriterOnload()"></script> -->
+<script src="https://cdn.jsdelivr.net/npm/hanzi-writer@3.5/dist/hanzi-writer.min.js" onload="hanziWriterOnload()"></script>
 
 

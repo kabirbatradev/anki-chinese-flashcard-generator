@@ -1,0 +1,63 @@
+/* default styling: */
+.card {
+    font-family: arial;
+    font-size: 20px;
+    text-align: center;
+    color: black;
+    background-color: white;
+}
+
+/* to prevent android dark mode from inverting the background color  */
+.night_mode.target [style*="background:"] {
+    filter: invert(100%);
+}
+
+
+.outerBox {
+    padding: 10px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    /* align-items: center; */
+}
+
+#hanziAnimationDiv {
+    /* in the flex box */
+
+    /* round the corners */
+    border-radius: 25px; 
+
+    
+}
+
+.buttonContainer {
+    /* padding: 10px; */
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.changeSizeButton {
+    height: 30px;
+    aspect-ratio: 1 / 1;
+    /* width: 30px; */
+    padding: 10px 10px;
+    border-radius: 50%;
+    background-color: #5e5e5e; /* same as hanzi stroke card */
+
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+
+    /* font-size: small; */
+
+    cursor: pointer;
+
+    border: 2px solid #222;
+
+}
+
+.night_mode.changeSizeButton [style*="background-color:"] {
+    filter: invert(100%);
+}

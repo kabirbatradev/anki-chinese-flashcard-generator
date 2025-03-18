@@ -221,10 +221,10 @@ def generate_and_download_anki_package(event):
         # Try to read template files, or use defaults if files don't exist
         try:
             frontTemplateFileString = open("FrontTemplate.html", "r", encoding="utf8").read()
-            backTemplateFileString = open("BackTemplate.html", "r", encoding="utf8").read()
+            backTemplateFileString = open("BackTemplateNoStrokeData.html", "r", encoding="utf8").read()
             templateStylingFileString = open("TemplateStyling.css", "r", encoding="utf8").read()
-        except:
-            # Use default templates if files not found
+        except Exception as e:
+            update_error_messages([f"Error generating Anki package: {str(e)}"])
             frontTemplateFileString = "{{Front}}"
             backTemplateFileString = "{{FrontSide}}<hr id='answer'>{{Back}}"
             templateStylingFileString = ".card { font-family: arial; font-size: 20px; text-align: center; }"
