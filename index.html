@@ -55,7 +55,7 @@
     <!-- PyScript loading event handling -->
     <script type="module">
         document.addEventListener('py:ready', function() {
-            console.log('PyScript is ready!');
+            console.log('removing loading indicator');
             const loadingIndicator = document.getElementById('loading-indicator');
             if (loadingIndicator) {
                 loadingIndicator.style.display = 'none';
@@ -71,9 +71,11 @@
     </div>
 
     <!-- PyScript Configuration -->
+     <!-- this doesnt work -->
     <!-- <py-config>
         [[fetch]]
         files = ["ui_handler.py", "main.py"]
+        from = './'
     </py-config> -->
 
     <div class="container mx-auto px-4 py-8 max-w-6xl">
