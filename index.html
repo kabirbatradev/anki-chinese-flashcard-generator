@@ -73,6 +73,8 @@
     <!-- load the hanzi writer to be used in main.py -->
     <script src="_hanziWriter.js"></script>
 
+
+    <!-- load the templates to be used in main.py -->
     <script>
         async function loadFile(fileName) {
           try {
@@ -94,7 +96,6 @@
           const frontTemplate = await loadFile("FrontTemplate.html");
           const backTemplate = await loadFile("BackTemplateNoStrokeData.html");
           const templateStyling = await loadFile("TemplateStyling.css");
-          console.log(backTemplate)
 
           // Pass the loaded content to PyScript
           window.frontTemplate = frontTemplate;

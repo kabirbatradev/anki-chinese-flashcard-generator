@@ -232,7 +232,7 @@ def generate_and_download_anki_package(event):
             backTemplateFileString = "{{FrontSide}}<hr id='answer'>{{Back}}"
             templateStylingFileString = ".card { font-family: arial; font-size: 20px; text-align: center; }"
         
-        print("from python front template:", backTemplateFileString)
+        # print("from python front template:", backTemplateFileString)
 
         # Create the model aka template
         my_model = genanki.Model(
