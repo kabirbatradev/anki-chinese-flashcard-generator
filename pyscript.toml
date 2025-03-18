@@ -1,1 +1,3 @@
 packages = [ "genanki", "sqlite3", "requests" ]
+[fetch]
+files = ["ui_handler.py", "main.py"]
