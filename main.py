@@ -203,13 +203,13 @@ async def process_file(file_content, textbook_name, lesson_name):
     update_statistics(stats)
     
     # Enable download button if we have cards
-    if stats['total_cards'] > 0:
-        download_btn = document.getElementById("download-btn")
+    # if stats['total_cards'] > 0:
         
-        # download_btn.disabled = not validateForm()
-        validateForm() # automatically enables or disables the download button
-        # Set up download button event listener
-        download_btn.addEventListener("click", create_proxy(generate_and_download_anki_package))
+        
+    # download_btn.disabled = not validateForm()
+    validateForm() # automatically enables or disables the download button
+
+
 
 def generate_and_download_anki_package(event):
     # Get deck metadata
@@ -279,11 +279,8 @@ def generate_and_download_anki_package(event):
         # Create package with all decks
         my_package = genanki.Package(allGenAnkiDecks)
         
-        # Try to add media files if they exist
-        try:
-            my_package.media_files = ['_hanziWriter.js']
-        except:
-            pass
+        # add media files if they exist
+        my_package.media_files = ['_hanziWriter.js']
             
         # Generate package filename
         ankiPackageFileName = f'{outerDeckName.replace("::", " ")} {lesson_name} Anki Package.apkg'
@@ -318,6 +315,11 @@ def generate_and_download_anki_package(event):
         
     except Exception as e:
         update_error_messages([f"Error generating Anki package: {str(e)}"])
+
+# this should only be run once (not in process file function)
+# Set up download button event listener
+download_btn = document.getElementById("download-btn")
+download_btn.addEventListener("click", create_proxy(generate_and_download_anki_package))
 
 # Connect to UI handler
 async def handle_file_from_ui(file_text, file_name):
