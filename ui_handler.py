@@ -11,8 +11,10 @@ async def handle_file_upload(event):
             console.error("No files selected")
             update_error_messages(["Error: No files selected"])
             return
-            
-        file = event.target.files[0]
+        
+        # print(event.target.files.item(0))
+        file = event.target.files.item(0)
+
         console.log(f"Processing file: {file.name}")
         
         # Read the file content
