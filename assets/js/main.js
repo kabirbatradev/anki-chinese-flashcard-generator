@@ -1,6 +1,15 @@
-document.addEventListener('DOMContentLoaded', () => {
+// Initialize UI elements only when both DOM and PyScript are ready
+function initializeUI() {
+    console.log('Initializing UI elements');
     const dropZone = document.getElementById('drop-zone');
     const fileInput = document.getElementById('file-input');
+    
+    // Check if elements exist
+    if (!dropZone || !fileInput) {
+        console.error('Required DOM elements not found');
+        return;
+    }
+    
     const chooseFileBtn = dropZone.querySelector('button');
 
     // Handle drag and drop events
@@ -27,6 +36,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Handle file drop
     dropZone.addEventListener('drop', (e) => {
+        console.log('File dropped');
         const dt = e.dataTransfer;
         const files = dt.files;
 
@@ -38,6 +48,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Handle choose file button click
     chooseFileBtn.addEventListener('click', () => {
+        console.log('Choose file button clicked');
         fileInput.click();
     });
 
@@ -49,11 +60,40 @@ document.addEventListener('DOMContentLoaded', () => {
     function validateForm() {
         const isValid = textbookName.value.trim() !== '' && 
                        lessonName.value.trim() !== '' && 
-                       fileInput.files.length > 0;
-        downloadBtn.disabled = !isValid;
+                       fileInput.files && fileInput.files.length > 0;
+        if (downloadBtn) {
+            downloadBtn.disabled = !isValid;
+        }
     }
 
     textbookName.addEventListener('input', validateForm);
     lessonName.addEventListener('input', validateForm);
-    fileInput.addEventListener('change', validateForm);
+    fileInput.addEventListener('change', (e) => {
+        console.log('File input changed', e);
+        validateForm();
+    });
+    
+    console.log('UI initialization complete');
+}
+
+// Set up event listeners for when both DOM and PyScript are ready
+document.addEventListener('DOMContentLoaded', () => {
+    console.log('DOM content loaded');
+    
+    // Check if PyScript is already ready
+    if (window.isPyScriptReady) {
+        initializeUI();
+    } else {
+        // Add a listener for when PyScript becomes ready
+        document.addEventListener('py:ready', () => {
+            console.log('PyScript ready event received in main.js');
+            window.isPyScriptReady = true;
+            initializeUI();
+        });
+    }
+});
+
+// In case py:ready fires before our listener is attached
+document.addEventListener('py:ready', () => {
+    window.isPyScriptReady = true;
 }); 
