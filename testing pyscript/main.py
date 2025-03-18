@@ -58,4 +58,49 @@ my_note = genanki.Note(
 my_deck = genanki.Deck(2059400110, "Country Capitals")
 
 my_deck.add_note(my_note)
-genanki.Package(my_deck).write_to_file('output.apkg')
+
+# this doesnt work in website, need to make fake url
+# genanki.Package(my_deck).write_to_file('output.apkg')
+
+
+
+
+
+
+
+
+
+
+
+from pyodide.ffi import create_proxy
+from js import document, Uint8Array, File, URL, window
+import io
+
+# Instead of writing directly to a file, write to an in-memory buffer
+buffer = io.BytesIO()
+genanki.Package(my_deck).write_to_file(buffer)
+buffer.seek(0)  # Reset buffer position to the beginning
+
+# Convert the buffer to a format usable in the browser
+content = buffer.getvalue()
+content_array = Uint8Array.new(bytearray(content))
+
+# Create a Blob and URL for downloading
+file = File.new([content_array], "output.apkg", {type: "application/octet-stream"})
+url = URL.createObjectURL(file)
+
+# Create a download link and trigger it
+download_link = document.createElement("a")
+download_link.href = url
+download_link.download = "output.apkg"
+download_link.innerHTML = "Download Anki Package"
+document.body.appendChild(download_link)
+
+# Optional: Auto-trigger the download without requiring a click
+# download_link.click()
+
+# Clean up the URL object when done
+def cleanup(event):
+    URL.revokeObjectURL(url)
+
+download_link.addEventListener("click", create_proxy(cleanup))
