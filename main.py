@@ -171,8 +171,9 @@ async def process_file(file_content, textbook_name, lesson_name):
             if examplesExist: back += f"<br>(phrases: {exampleChinese})"
             back += "<br>"
 
-            back += f'<div id="hanzi" style="display:none">{hanzi.replace("（", "").replace("）", "")}</div>'
-            front += f'<div id="hanzi" style="display:none">{hanzi.replace("（", "").replace("）", "")}</div>'
+            # no need to add a hidden div with the hanzi
+            # back += f'<div id="hanzi" style="display:none">{hanzi.replace("（", "").replace("）", "")}</div>'
+            # front += f'<div id="hanzi" style="display:none">{hanzi.replace("（", "").replace("）", "")}</div>'
 
             # add the stroke order data in an invisible div
             # no need for this anymore, as we fetch stroke data within the card template
@@ -219,8 +220,9 @@ def generate_and_download_anki_package(event):
     
     try:
         # Card template setup
-        model_id = 1956882460  # Template ID
-        model_name = "Kabir's Chinese Card Template"
+        # model_id = 1956882460 # id before the new version with no stroke data
+        model_id = 1871848993
+        model_name = "Kabir's Chinese Card Template (automatically generate stroke animation)"
 
         # Try to read template files, or use defaults if files don't exist
         try:
