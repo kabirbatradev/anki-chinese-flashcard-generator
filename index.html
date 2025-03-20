@@ -131,8 +131,43 @@
                 </p>
             </header>
 
-            <!-- Metadata Input Section -->
+            <!-- File Upload Section -->
             <section class="bg-white p-4 rounded-lg shadow-md mb-4">
+                <h2 class="text-xl font-semibold mb-2 text-gray-700">Upload Vocabulary File</h2>
+                <div class="drag-drop-zone p-4 text-center rounded-lg cursor-pointer" id="drop-zone">
+                    <div class="space-y-2">
+                        <div class="text-4xl text-gray-300">📄</div>
+                        <p class="text-gray-600 text-sm">Drag and drop your .txt file here</p>
+                        <p class="text-gray-400 text-xs">- or -</p>
+                        <button class="bg-blue-500 text-white px-4 py-1 rounded-md hover:bg-blue-600 transition-colors">
+                            Choose File
+                        </button>
+                        <input type="file" 
+                               id="file-input" 
+                               accept=".txt"
+                               class="hidden">
+                        <!-- File name display -->
+                        <p id="file-name-display" class="text-sm text-blue-600 mt-2 hidden"></p>
+                    </div>
+                </div>
+                <!-- Example Text File Format -->
+                <div class="bg-gray-100 p-4 mt-4 rounded-md">
+                    <h3 class="text-sm font-medium text-gray-700 mb-2">Example of text file format:</h3>
+                    <pre class="text-xs text-gray-600 whitespace-pre-wrap">
+<!-- [Subdeck Name Here]
+Hanzi; Pinyin: Definition; optional: Example phrases Chinese; Example phrases English
+... (more lines for more vocab) -->
+Text 1 (subdeck name)
+我; wǒ: I/me; 我喜欢学习中文; I like studying Chinese
+你; nǐ: you; 你会说中文吗？; Can you speak Chinese?
+
+Basic Hanzi (new subdeck)
+人; rén; person                    </pre>
+                </div>
+            </section>
+
+            <!-- Metadata Input Section -->
+            <section class="bg-white p-4 rounded-lg shadow-md mb-4" id="metadata-section">
                 <h2 class="text-xl font-semibold mb-2 text-gray-700">Deck Information</h2>
                 <div class="grid grid-cols-1 gap-2">
                     <div>
@@ -156,55 +191,6 @@
                 </div>
             </section>
 
-            <!-- File Upload Section -->
-            <section class="bg-white p-4 rounded-lg shadow-md mb-4">
-                <h2 class="text-xl font-semibold mb-2 text-gray-700">Upload Vocabulary File</h2>
-                <div class="drag-drop-zone p-4 text-center rounded-lg cursor-pointer" id="drop-zone">
-                    <div class="space-y-2">
-                        <div class="text-4xl text-gray-300">📄</div>
-                        <p class="text-gray-600 text-sm">Drag and drop your .txt file here</p>
-                        <p class="text-gray-400 text-xs">- or -</p>
-                        <button class="bg-blue-500 text-white px-4 py-1 rounded-md hover:bg-blue-600 transition-colors">
-                            Choose File
-                        </button>
-                        <input type="file" 
-                               id="file-input" 
-                               accept=".txt"
-                               class="hidden">
-                        <!-- File name display -->
-                        <p id="file-name-display" class="text-sm text-blue-600 mt-2 hidden"></p>
-                    </div>
-                </div>
-                <!-- Example Text File Format -->
-                <div class="bg-gray-100 p-4 mt-4 rounded-md">
-                    <h3 class="text-sm font-medium text-gray-700 mb-2">Text file format example:</h3>
-                    <pre class="text-xs text-gray-600 whitespace-pre-wrap">
-# Subdeck Name
-Hanzi; Pinyin: Definition; Example phrases Chinese; Example phrases English
-...
-(Note: Example phrases are optional)
-
-# Example:
-Text 1 (subdeck name)
-我; wǒ: I/me; 我喜欢学习中文; I like studying Chinese
-Supplementary (new subdeck)
-你; nǐ: you; 你会说中文吗？; Can you speak Chinese?
-
-# Without Example Phrases:
-Basics
-他; tā: he/him
-                    </pre>
-                </div>
-            </section>
-
-            <!-- Feedback Section -->
-            <section class="bg-white p-4 rounded-lg shadow-md mb-4" id="feedback-section">
-                <h2 class="text-xl font-semibold mb-2 text-gray-700">Processing Status</h2>
-                <div id="error-messages" class="space-y-1">
-                    <!-- Error messages will be inserted here -->
-                </div>
-            </section>
-
             <!-- Download Section -->
             <section class="bg-white p-4 rounded-lg shadow-md mb-4" id="download-section">
                 <div class="flex justify-between items-center">
@@ -219,6 +205,14 @@ Basics
                             disabled>
                         Download Deck
                     </button>
+                </div>
+            </section>
+
+            <!-- Feedback Section -->
+            <section class="bg-white p-4 rounded-lg shadow-md mb-4" id="feedback-section">
+                <h2 class="text-xl font-semibold mb-2 text-gray-700">Processing Status</h2>
+                <div id="error-messages" class="space-y-1">
+                    <!-- Error messages will be inserted here -->
                 </div>
             </section>
 

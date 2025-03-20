@@ -81,18 +81,18 @@ function initializeUI() {
 }
 
 // Global function to be called from Python to scroll to the download section
-function scrollToDownloadSection() {
-    console.log('Scrolling to download section');
-    const downloadSection = document.getElementById('download-section');
-    if (downloadSection) {
-        downloadSection.scrollIntoView({ behavior: 'smooth' });
+function scrollToMetadataSection() {
+    console.log('Scrolling to metadata section');
+    const metadataSection = document.getElementById('metadata-section');
+    if (metadataSection) {
+        metadataSection.scrollIntoView({ behavior: 'smooth' });
     } else {
-        console.error('Download section not found');
+        console.error('Metadata section not found');
     }
 }
 
 // Add the function to the window object to make it accessible from Python
-window.scrollToDownloadSection = scrollToDownloadSection;
+window.scrollToMetadataSection = scrollToMetadataSection;
 
 function validateForm() {
     console.log('Validating form');

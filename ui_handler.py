@@ -48,7 +48,7 @@ async def handle_file_upload(event):
             console.log(f"File processing result: {result}")
 
             # Scroll to the download section using JavaScript from Python
-            window.scrollToDownloadSection()
+            window.scrollToMetadataSection()
             
             # Show initial upload success message
             update_error_messages([f"File uploaded: {file.name}", f"Found {result['vocab_count']} vocabulary items"])
