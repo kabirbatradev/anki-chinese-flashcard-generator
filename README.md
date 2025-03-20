@@ -1,6 +1,6 @@
 # Chinese Flashcard Generator
 
-Takes in a chinese vocab list generates an anki deck package with stroke order animation.
+Generate aesthetic flashcards with stroke order animation! Simple website UI runs python script locally to generate anki flashcard package. 
 
 <!-- ![](Screenshots/ankiScreenshotDesktop.png)
 ![](Screenshots/ankiScreenshotMobile.jpg)
@@ -32,15 +32,16 @@ Takes in a chinese vocab list generates an anki deck package with stroke order a
 
 ## Features:
 
-- Custom HTML/CSS/Javascript template uses the HanziWriter javascript library to render Chinese flashcards with stroke order.
-  - includes resize button
-  - includes ability to tap the character to restart the animation
-  - includes stroke speed slider (feature in progress)
+- Custom HTML/CSS/Javascript template uses the HanziWriter javascript library to render Chinese flashcards with stroke order animation.
+- Additional features:
+  - Resize button
+  - Tap the character to restart the animation
 - Parses the vocab list text file, downloads HanziWriter stroke order data, and generates the front and back of flashcards (including examples) in a format compatible with my flashcard template.
 - Uses genanki library to package decks of cards into an anki package.
 
 ## How to use:
-Check out the website at https://kabirbatradev.github.io/anki-chinese-flashcard-generator/
+- Check out the website at https://kabirbatradev.github.io/anki-chinese-flashcard-generator/
+- Website runs python script locally; no need to download anything!
 
 <img src="Screenshots/Chinese Flashcard Generator Website.png" width="80%">
 
