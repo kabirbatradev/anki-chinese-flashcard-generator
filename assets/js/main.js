@@ -1,12 +1,18 @@
-// Initialize UI elements only when both DOM and PyScript are ready
+// Initialize UI elements 
 function initializeUI() {
     console.log('Initializing UI elements');
     const dropZone = document.getElementById('drop-zone');
     const fileInput = document.getElementById('file-input');
     const fileNameDisplay = document.getElementById('file-name-display');
+    const textbookName = document.getElementById('textbook-name');
+    const lessonName = document.getElementById('lesson-name');
+    
+    // Clear deck information fields on page load
+    textbookName.value = '';
+    lessonName.value = '';
     
     // Check if elements exist
-    if (!dropZone || !fileInput || !fileNameDisplay) {
+    if (!dropZone || !fileInput || !fileNameDisplay || !textbookName || !lessonName) {
         console.error('Required DOM elements not found');
         return;
     }
@@ -54,27 +60,25 @@ function initializeUI() {
     });
 
     // Display uploaded file name
-    fileInput.addEventListener('change', () => {
+    fileInput.addEventListener('change', async () => {
         if (fileInput.files.length > 0) {
-            const fileName = fileInput.files[0].name;
+            const file = fileInput.files[0];
+            const fileName = file.name;
             fileNameDisplay.textContent = `Uploaded file: ${fileName}`;
             fileNameDisplay.classList.remove('hidden');
             console.log(`Uploaded file: ${fileName}`);
+
+            // Scroll to download section
+            document.getElementById('download-section').scrollIntoView({ behavior: 'smooth' });
         } else {
             fileNameDisplay.textContent = '';
             fileNameDisplay.classList.add('hidden');
         }
     });
 
-    const textbookName = document.getElementById('textbook-name');
-    const lessonName = document.getElementById('lesson-name');
-
     textbookName.addEventListener('input', validateForm);
     lessonName.addEventListener('input', validateForm);
-    fileInput.addEventListener('change', (e) => {
-        console.log('File input changed', e);
-        validateForm();
-    });
+    fileInput.addEventListener('change', validateForm);
 
     console.log('UI initialization complete');
 }
@@ -101,75 +105,10 @@ function validateForm() {
     }
 }
 
-// Set up event listeners for when both DOM and PyScript are ready
+// Set up event listeners when both DOM and PyScript are ready
 document.addEventListener('DOMContentLoaded', () => {
     console.log('DOM content loaded');
     
-    const dropZone = document.getElementById('drop-zone');
-    const fileInput = document.getElementById('file-input');
-    const fileNameDisplay = document.getElementById('file-name-display');
-
-    // Check if elements exist
-    if (!dropZone || !fileInput || !fileNameDisplay) {
-        console.error('Required DOM elements not found');
-        return;
-    }
-    
-    const chooseFileBtn = dropZone.querySelector('button');
-
-    // Handle drag and drop events
-    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
-        dropZone.addEventListener(eventName, preventDefaults, false);
-    });
-
-    function preventDefaults(e) {
-        e.preventDefault();
-        e.stopPropagation();
-    }
-
-    ['dragenter', 'dragover'].forEach(eventName => {
-        dropZone.addEventListener(eventName, () => {
-            dropZone.classList.add('dragover');
-        });
-    });
-
-    ['dragleave', 'drop'].forEach(eventName => {
-        dropZone.addEventListener(eventName, () => {
-            dropZone.classList.remove('dragover');
-        });
-    });
-
-    // Handle file drop
-    dropZone.addEventListener('drop', (e) => {
-        console.log('File dropped');
-        const dt = e.dataTransfer;
-        const files = dt.files;
-
-        if (files.length > 0) {
-            fileInput.files = files;
-            fileInput.dispatchEvent(new Event('change'));
-        }
-    });
-
-    // Handle choose file button click
-    chooseFileBtn.addEventListener('click', () => {
-        console.log('Choose file button clicked');
-        fileInput.click();
-    });
-
-    // Display uploaded file name
-    fileInput.addEventListener('change', () => {
-        if (fileInput.files.length > 0) {
-            const fileName = fileInput.files[0].name;
-            fileNameDisplay.textContent = `Uploaded file: ${fileName}`;
-            fileNameDisplay.classList.remove('hidden');
-            console.log(`Uploaded file: ${fileName}`);
-        } else {
-            fileNameDisplay.textContent = '';
-            fileNameDisplay.classList.add('hidden');
-        }
-    });
-
     // Check if PyScript is already ready
     if (window.isPyScriptReady) {
         initializeUI();
