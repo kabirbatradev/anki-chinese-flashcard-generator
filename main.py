@@ -69,7 +69,7 @@ async def process_file(file_content, textbook_name, lesson_name):
     
     # Process messages to display to user
     messages = []
-    messages.append(f"Processing file for {textbook_name}: {lesson_name}")
+    # messages.append(f"Processing file for {textbook_name}: {lesson_name}")
     
     # Set up outer deck name
     outerDeckName = f"{textbook_name}::{lesson_name}"
