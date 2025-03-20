@@ -46,6 +46,9 @@ async def handle_file_upload(event):
             # result = main.handle_file_from_ui(text, file.name)
             result = await handle_file_from_ui(text, file.name)
             console.log(f"File processing result: {result}")
+
+            # Scroll to the download section using JavaScript from Python
+            window.scrollToDownloadSection()
             
             # Show initial upload success message
             update_error_messages([f"File uploaded: {file.name}", f"Found {result['vocab_count']} vocabulary items"])

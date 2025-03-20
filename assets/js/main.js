@@ -67,9 +67,6 @@ function initializeUI() {
             fileNameDisplay.textContent = `Uploaded file: ${fileName}`;
             fileNameDisplay.classList.remove('hidden');
             console.log(`Uploaded file: ${fileName}`);
-
-            // Scroll to download section
-            document.getElementById('download-section').scrollIntoView({ behavior: 'smooth' });
         } else {
             fileNameDisplay.textContent = '';
             fileNameDisplay.classList.add('hidden');
@@ -82,6 +79,20 @@ function initializeUI() {
 
     console.log('UI initialization complete');
 }
+
+// Global function to be called from Python to scroll to the download section
+function scrollToDownloadSection() {
+    console.log('Scrolling to download section');
+    const downloadSection = document.getElementById('download-section');
+    if (downloadSection) {
+        downloadSection.scrollIntoView({ behavior: 'smooth' });
+    } else {
+        console.error('Download section not found');
+    }
+}
+
+// Add the function to the window object to make it accessible from Python
+window.scrollToDownloadSection = scrollToDownloadSection;
 
 function validateForm() {
     console.log('Validating form');
