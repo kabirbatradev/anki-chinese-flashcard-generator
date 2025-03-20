@@ -1,4 +1,4 @@
-# anki-chinese-flashcard-generator
+# Chinese Flashcard Generator
 
 Takes in a chinese vocab list generates an anki deck package with stroke order animation.
 
@@ -40,7 +40,7 @@ Takes in a chinese vocab list generates an anki deck package with stroke order a
 - Uses genanki library to package decks of cards into an anki package.
 
 ## How to use:
-1. Use the website! (under construction)
+1. Check out the website at https://kabirbatradev.github.io/anki-chinese-flashcard-generator/
 
 If you enjoyed using this or have feature requests, feel free to [email me](mailto:kabirbatraa@gmail.com).
 
